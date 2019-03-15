@@ -1,4 +1,5 @@
 import * as express from "express";
+import * as path from "path";
 import * as bodyParser from "body-parser";
 import * as socketIo from "socket.io";
 import * as cookieParser from "cookie-parser";
@@ -9,6 +10,7 @@ let http = require("http");
 import {HOST, PORT} from '../utils/Constants'
 
 import {Socket} from './Socket';
+import {IndexRoute} from "../routes/IndexRoute";
 
 /* ====================== Clase donde se configura el servidor ====================== */
 export class Server {
@@ -35,6 +37,8 @@ export class Server {
     /* Se crean las configuraciones respectivas del servidor */
     public Configuracion() {
         this.port = process.env.PORT || Server.PORT;
+
+        this.app.use(express.static(path.join(__dirname, "/../build")));        // Agregar la ruta de los static
 
         // JSON Parser
         this.app.use(bodyParser.json());
@@ -73,6 +77,14 @@ export class Server {
     /* Devuelve una instancia de la aplicacion */
     public static Instance(): Server {
         return new Server();
+    }
+
+    /* Se crean las rutas para las paginas en html */
+    public Routes() {
+        let router: express.Router;
+        router = express.Router();
+        IndexRoute.Home(router);
+        this.app.use(router);                       // Usa el middleware del Router de express
     }
 
     /* Metodo donde escucha el servidor en el puerto definido */

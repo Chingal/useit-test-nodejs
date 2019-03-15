@@ -1,12 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
+const path = require("path");
 const bodyParser = require("body-parser");
 const socketIo = require("socket.io");
 const cookieParser = require("cookie-parser");
 let http = require("http");
 const Constants_1 = require("../utils/Constants");
 const Socket_1 = require("./Socket");
+const IndexRoute_1 = require("../routes/IndexRoute");
 /* ====================== Clase donde se configura el servidor ====================== */
 class Server {
     /* Constructor Por Defecto */
@@ -24,6 +26,7 @@ class Server {
     /* Se crean las configuraciones respectivas del servidor */
     Configuracion() {
         this.port = process.env.PORT || Server.PORT;
+        this.app.use(express.static(path.join(__dirname, "/../build"))); // Agregar la ruta de los static
         // JSON Parser
         this.app.use(bodyParser.json());
         // Parser de las consultas tipo String
@@ -54,6 +57,13 @@ class Server {
     /* Devuelve una instancia de la aplicacion */
     static Instance() {
         return new Server();
+    }
+    /* Se crean las rutas para las paginas en html */
+    Routes() {
+        let router;
+        router = express.Router();
+        IndexRoute_1.IndexRoute.Home(router);
+        this.app.use(router); // Usa el middleware del Router de express
     }
     /* Metodo donde escucha el servidor en el puerto definido */
     Listen() {
