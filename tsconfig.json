@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "sourceMap": true,
+    "noImplicitAny": false, // Raise error on expressions and declarations with an implied ‘any’ type.
+    "lib": [ "es2017", "dom" ]
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
